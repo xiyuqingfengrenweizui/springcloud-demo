@@ -9,21 +9,18 @@ import com.renweizui.clouddemo.product.dto.UserDto;
 import com.renweizui.clouddemo.product.entity.Product;
 import com.renweizui.clouddemo.product.entity.ProductComment;
 import com.renweizui.clouddemo.product.service.ProductService;
+import com.renweizui.clouddemo.product.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +40,8 @@ public class ProductEndPoint extends BaseEndPoint {
 
     @Autowired
     private ProductService productService;
-
     @Autowired
-    @Qualifier(value = "restTemplate")
-    private RestTemplate restTemplate;
+    private UserService userService;
 
     /**
      * 获取商品列表
@@ -139,17 +134,14 @@ public class ProductEndPoint extends BaseEndPoint {
      */
     protected UserDto loadUser(Long userId) {
         UserDto userDto = null;
-        String url = "http://user-service/users/{id}";
-//        返回带泛型的对象，要使用exchange
-        DataResponse<UserDto> dataResponse = this.restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, new HttpEntity() {
-        }, new ParameterizedTypeReference<DataResponse<UserDto>>() {
-        }, userId).getBody();
+
+        DataResponse<UserDto> dataResponse = this.userService.load(userId);
+
         if (dataResponse != null) {
             userDto = dataResponse.getData();
-
-//        if(userDto!=null){
-//            this.logger.debug("I came from port:{}",userDto.get);
-//        }
+            if (userDto != null) {
+                this.logger.debug("I came from port:{}", userDto.getUserServicePort());
+            }
         }
 
         return userDto;

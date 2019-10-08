@@ -48,10 +48,6 @@ public class ProductEndPoint extends BaseEndPoint {
     @Qualifier(value = "restTemplate")
     private RestTemplate restTemplate;
 
-//    @Autowired
-//    private UserService userService;
-
-
     /**
      * 获取商品列表
      *

@@ -37,23 +37,28 @@ public class UserDto implements Serializable {
     @ApiModelProperty(value = "用户头像")
     private String avatar;
 
-    public UserDto(User user) {
+    /**
+     * 数据来源端口，用于测试ribbon
+     */
+    @ApiModelProperty(value = "数据来源端口")
+    private int userServicePort;
+
+    public UserDto(User user,int userServicePort) {
         if (null != user) {
             this.id = user.getId();
             this.avatar = user.getAvatar();
             this.nickname = user.getNickname();
+            this.userServicePort = userServicePort;
         }
     }
 
     @Override
     public String toString() {
-
-        return "User{" +
+        return "UserDto{" +
                 "id=" + id +
                 ", nickname='" + nickname + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", userServicePort='" + userServicePort + '\'' +
                 '}';
     }
-
-
 }

@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/users")
 public class UserEndPoint extends BaseEndPoint {
+
+
+    //注入当前服务端口
+    @Value("${server.port}")
+    private int userServerPort = 0;
 
     @Autowired
     private UserService userService;
@@ -55,7 +61,7 @@ public class UserEndPoint extends BaseEndPoint {
 
         Page<User> page = this.userService.getPage(pageable);
         if (null != page) {
-            list = page.getContent().stream().map(UserDto::new).collect(Collectors.toList());
+            list = page.getContent().stream().map(user -> new UserDto(user,userServerPort)).collect(Collectors.toList());
         }
         return this.success(list);
 
@@ -80,7 +86,7 @@ public class UserEndPoint extends BaseEndPoint {
         List<User> topUser = this.userService.findTopUser(num);
 
         if (null != topUser && topUser.size() > 0) {
-            list = topUser.stream().map(UserDto::new).collect(Collectors.toList());
+            list = topUser.stream().map(user->new UserDto(user,userServerPort)).collect(Collectors.toList());
         }
         return this.success(list);
 
@@ -99,7 +105,7 @@ public class UserEndPoint extends BaseEndPoint {
     @GetMapping(value = "/{id}")
     public DataResponse<UserDto> detail(@PathVariable Long id) {
         User user = this.userService.load(id);
-        return this.success(null != user ? new UserDto(user) : null);
+        return this.success(null != user ? new UserDto(user,userServerPort) : null);
     }
 
     /**
@@ -118,7 +124,7 @@ public class UserEndPoint extends BaseEndPoint {
     public DataResponse<UserDto> update(@PathVariable Long id, @RequestBody UserDto userDto) {
         userDto.setId(id);
         User user = this.userService.save(userDto);
-        return this.success(new UserDto(user));
+        return this.success(new UserDto(user,userServerPort));
     }
 
 

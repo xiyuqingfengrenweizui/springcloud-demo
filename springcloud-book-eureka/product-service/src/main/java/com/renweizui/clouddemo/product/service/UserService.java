@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(value = "user-service",fallback = UserServiceFallback.class)
 public interface UserService {
 
-    @GetMapping("/users/{id}")
-    DataResponse<UserDto> load(@PathVariable Long id);
+    @GetMapping(value = "/users/{id}")
+    DataResponse<UserDto> load(@PathVariable(value = "id") Long id);
 
 }

@@ -18,6 +18,7 @@
         <module>product-service</module>
         <module>service-discovery</module>
         <module>user-service</module>
+        <module>zuul-server</module>
     </modules>
 
 </project>

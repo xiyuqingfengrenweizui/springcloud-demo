@@ -1,0 +1,9 @@
+server:
+  port: 11120
+spring:
+  application:
+    name: userservice
+  cloud:
+    config:
+      profile: ${SPRINGCLOUD_BOOK_PROFILE:dev}
+      uri: http://localhost:11190/

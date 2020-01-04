@@ -1,0 +1,12 @@
+server:
+#  productservice微服务端默认口
+  port: 11130
+spring:
+  application:
+#    productservice的微服务名称
+    name: productservice
+#    spring cloud相关配置
+  cloud:
+    config:
+      profile: dev
+      uri: http://localhost:11190/
